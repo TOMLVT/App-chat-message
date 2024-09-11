@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Congratulation \n  You have successfuley Login" ,
+            Text("Chúc mừng \n  Bạn đã tạo thành công !" ,
               textAlign: TextAlign.center,
               style: TextStyle(
               fontWeight: FontWeight.bold ,
@@ -25,7 +25,7 @@ class Home extends StatelessWidget {
                 await AuthMethod().signOut();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login()));
             },
-                text: "Log Out"),
+                text: "Đăng nhập ngay"),
           ],
         ),
       ),

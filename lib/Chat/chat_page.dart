@@ -1,5 +1,6 @@
 import 'package:app_chat_small/Chat/Message.dart';
 import 'package:app_chat_small/Login%20Signup/login.dart';
+import 'package:app_chat_small/Page/Profile.dart';
 import 'package:app_chat_small/Service/Authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 
 class chatPage extends StatefulWidget {
   final String name;
+
   const chatPage({super.key, required this.name});
 
   @override
@@ -18,12 +20,36 @@ class _chatPageState extends State<chatPage> {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  void _navigateToProfile() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProfilePage(name: widget.name , ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.name),
+        title: GestureDetector(
+          onTap: _navigateToProfile, // Điều hướng khi nhấp vào tên hoặc biểu tượng
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.person, size: 24), // Biểu tượng hình người
+              const SizedBox(width: 8), // Khoảng cách giữa biểu tượng và tên
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.name),
+
+                ],
+              ),
+            ],
+          ),
+        ),
         actions: [
           MaterialButton(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -35,7 +61,7 @@ class _chatPageState extends State<chatPage> {
               );
             },
             child: const Text(
-              "Sign Out",
+              "Thoát",
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -49,7 +75,7 @@ class _chatPageState extends State<chatPage> {
             child: Message(name: widget.name),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Row(
               children: [
                 Expanded(
@@ -57,7 +83,7 @@ class _chatPageState extends State<chatPage> {
                     controller: messageController,
                     decoration: InputDecoration(
                       filled: true,
-                      hintText: "Message",
+                      hintText: "Nhập tin nhắn...",
                       enabled: true,
                       contentPadding: const EdgeInsets.only(left: 15, bottom: 8, top: 8),
                       focusedBorder: OutlineInputBorder(

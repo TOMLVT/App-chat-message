@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:app_chat_small/Chat/chat_page.dart';
 import 'package:app_chat_small/Login%20Signup/Home.dart';
 import 'package:app_chat_small/Login%20Signup/SignUp.dart';
+import 'package:app_chat_small/Page/ForgotPassword.dart';
 import 'package:app_chat_small/Service/Authentication.dart';
 import 'package:app_chat_small/Widget/Button.dart';
 import 'package:app_chat_small/Widget/Snack_bar.dart';
@@ -72,41 +73,46 @@ class _LoginState extends State<Login> { // Changed to _LoginState
                 height: height / 2.7,
                 child: Image.asset("images/login.jpg"),
               ),
+              Text("Đăng nhập" , style: TextStyle(fontSize: 35 , fontWeight: FontWeight.bold),),
               TextFieldInput(
                 icon: Icons.person,
                 textEditingController: nameController,
-                hintText: 'Enter your name',
+                hintText: 'Nhập tên...',
               ),
               TextFieldInput(
                 icon: Icons.mail,
                 textEditingController: emailController,
-                hintText: 'Enter your email',
+                hintText: 'Nhập email...',
               ),
               // Add the password field
               TextFieldInput(
                 icon: Icons.lock,
                 textEditingController: passwordController,
-                hintText: 'Enter your password',
+                hintText: 'Nhập mật khẩu...',
                 isPass: true,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text("Forgot Password ?" , style: TextStyle(color: Colors.blue, fontSize: 16 , fontWeight: FontWeight.bold),),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
+                      },
+                      child: Text("Quên mật khẩu ?" , style: TextStyle(color: Colors.blue, fontSize: 16 , fontWeight: FontWeight.bold),)),
                 ),
               ),
-              MyButtons(onTap:  loginUser, text: "Log In"),
+              MyButtons(onTap:  loginUser, text: "Đăng nhập"),
               SizedBox(height: height / 15,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have a account ? " ,style: TextStyle(fontSize: 16 , ),),
+                  Text("Bạn chưa có tài khoản ? " ,style: TextStyle(fontSize: 16 , ),),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signup()));
                     },
-                      child: Text("Sign Up" , style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),))
+                      child: Text("Đăng ký ngay" , style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),))
                 ],
               )
             ],
