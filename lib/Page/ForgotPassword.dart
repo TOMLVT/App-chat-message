@@ -89,46 +89,136 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Khôi phục mật khẩu'),
       ),
       body: Padding(
+
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2.9,
+              child: Image.asset("images/forgot.jpg"),
+            ),
             TextField(
-
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Nhập Email...'),
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true, // allow edit color input ---
+                  fillColor: Colors.grey[200],
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 2,
+                        color: Colors.blue,
+                      ),
+                      borderRadius: BorderRadius.circular(30)
+                  ),
+                  labelText: 'Nhập Email...'),
               keyboardType: TextInputType.emailAddress,
             ),
+            SizedBox(height: 29,),
             TextField(
               controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Nhập số điện thoại...'),
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  filled: true, // allow edit color input ---
+                  fillColor: Colors.grey[200],
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 2,
+                        color: Colors.blue,
+                      ),
+                      borderRadius: BorderRadius.circular(30)
+                  ),
+                  labelText: 'Nhập số điện thoại...'),
               keyboardType: TextInputType.phone,
             ),
+            SizedBox(height: 29,),
             if (_isCodeSent) ...[
               TextField(
                 controller: _verificationCodeController,
-                decoration: InputDecoration(labelText: 'Nhập mã xác nhận...'),
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true, // allow edit color input ---
+                    fillColor: Colors.grey[200],
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          width: 2,
+                          color: Colors.blue,
+                        ),
+                        borderRadius: BorderRadius.circular(30)
+                    ),
+                    labelText: 'Nhập mã xác nhận...'),
               ),
+              SizedBox(height: 29,),
               TextField(
                 controller: _newPasswordController,
-                decoration: InputDecoration(labelText: 'Nhập mật khẩu mới...'),
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    filled: true, // allow edit color input ---
+                    fillColor: Colors.grey[200],
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          width: 2,
+                          color: Colors.blue,
+                        ),
+                        borderRadius: BorderRadius.circular(30)
+                    ),
+                    labelText: 'Nhập mật khẩu mới...'),
                 obscureText: true,
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _verifyCodeAndSetNewPassword,
-                child: Text('Xác nhận khôi phục'),
+              GestureDetector(
+                onTap: _verifyCodeAndSetNewPassword,
+                child: Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Center(
+                      child: Text("Xác nhận khôi phục" , style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold , fontSize: 19),)),
+                ),
               ),
+
             ] else ...[
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _sendVerificationCode,
-                child: Text('Gửi mã xác nhận'),
+              GestureDetector(
+                onTap: _sendVerificationCode,
+                child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Center(
+                      child: Text("Gửi mã xác nhận" , style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold , fontSize: 19),)),
+                ),
               ),
+
             ],
             SizedBox(height: 20),
             if (_errorMessage.isNotEmpty)

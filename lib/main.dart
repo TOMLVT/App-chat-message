@@ -1,5 +1,6 @@
 import 'package:app_chat_small/Login%20Signup/Home.dart';
 import 'package:app_chat_small/Login%20Signup/login.dart';
+import 'package:app_chat_small/Page/FirstPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         if (snapchot.hasData) {
            return const Home();
         } else {
-          return const Login();
+          return const Firstpage();
         }
       }),
     );

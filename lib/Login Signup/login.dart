@@ -62,6 +62,15 @@ class _LoginState extends State<Login> { // Changed to _LoginState
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+                Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios)
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox(

@@ -24,6 +24,7 @@ class TextFieldInput extends StatelessWidget {
         style: const TextStyle(fontSize: 20),
         controller: textEditingController,
         decoration: InputDecoration(
+          border: InputBorder.none,
           filled: true, // allow edit color input ---
           fillColor: Colors.grey[200],
           prefixIcon: Icon(icon, color: Colors.black54),
@@ -33,6 +34,13 @@ class TextFieldInput extends StatelessWidget {
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(30),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 2,
+              color: Colors.blue,
+            ),
+            borderRadius: BorderRadius.circular(30)
+          )
         ),
 
       ),

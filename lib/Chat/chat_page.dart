@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'package:app_chat_small/Chat/Message.dart';
 import 'package:app_chat_small/Login%20Signup/login.dart';
 import 'package:app_chat_small/Page/Profile.dart';
 import 'package:app_chat_small/Service/Authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class chatPage extends StatefulWidget {
   final String name;
@@ -19,11 +22,63 @@ class _chatPageState extends State<chatPage> {
   final TextEditingController messageController = TextEditingController();
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final ImagePicker _picker = ImagePicker();
+
+
+  // Phương thức _sendMessage để gửi tin nhắn:----------------------------------
+  Future<void> _sendMessage({String? imageUrl}) async {
+    if (messageController.text.isNotEmpty || imageUrl != null) {
+      try {
+        await firebaseFirestore.collection("Message").add({
+          'message': messageController.text.trim(),
+          'time': FieldValue.serverTimestamp(),
+          'name': widget.name,
+          'imageUrl': imageUrl,
+        });
+        messageController.clear();
+      } catch (error) {
+        print("Failed to send message: $error");
+      }
+    }
+  }
+
+
+
+  // Phương thức _pickImage để chọn và tải ảnh: --------------------------------
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('chat_images/${DateTime.now().millisecondsSinceEpoch}');
+        final uploadTask = storageRef.putFile(File(image.path));
+
+        uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+          print('Upload progress: ${(snapshot.bytesTransferred / snapshot.totalBytes) * 100}%');
+        });
+
+        final snapshot = await uploadTask.whenComplete(() => null);
+        final imageUrl = await snapshot.ref.getDownloadURL();
+
+        print("Image URL: $imageUrl"); // Debugging line
+
+        // Gửi tin nhắn chứa URL của ảnh
+        await _sendMessage(imageUrl: imageUrl);
+      } else {
+        print("No image selected.");
+      }
+    } catch (error) {
+      print("Failed to pick and upload image: $error");
+    }
+  }
+
+
 
   void _navigateToProfile() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ProfilePage(name: widget.name , ),
+        builder: (context) => ProfilePage(name: widget.name),
       ),
     );
   }
@@ -34,17 +89,16 @@ class _chatPageState extends State<chatPage> {
       appBar: AppBar(
         centerTitle: true,
         title: GestureDetector(
-          onTap: _navigateToProfile, // Điều hướng khi nhấp vào tên hoặc biểu tượng
+          onTap: _navigateToProfile,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.person, size: 24), // Biểu tượng hình người
-              const SizedBox(width: 8), // Khoảng cách giữa biểu tượng và tên
+              const Icon(Icons.person, size: 24),
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.name),
-
                 ],
               ),
             ],
@@ -61,7 +115,7 @@ class _chatPageState extends State<chatPage> {
               );
             },
             child: const Text(
-              "Thoát",
+              "Đăng xuất",
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -71,20 +125,23 @@ class _chatPageState extends State<chatPage> {
       body: Column(
         children: [
           Expanded(
-            // Hiển thị danh sách tin nhắn
             child: Message(name: widget.name),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Row(
               children: [
+                IconButton(
+                  icon: const Icon(Icons.image, size: 30, color: Colors.blue),
+                  onPressed: _pickImage, // Chọn ảnh từ thư viện
+                ),
+                const SizedBox(width: 8),
                 Expanded(
                   child: TextFormField(
                     controller: messageController,
                     decoration: InputDecoration(
                       filled: true,
                       hintText: "Nhập tin nhắn...",
-                      enabled: true,
                       contentPadding: const EdgeInsets.only(left: 15, bottom: 8, top: 8),
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Color(0xffb3e5fc)),
@@ -97,7 +154,7 @@ class _chatPageState extends State<chatPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Message cannot be empty';
+                        return 'Tin nhắn không thể trống !';
                       }
                       return null;
                     },
@@ -111,7 +168,7 @@ class _chatPageState extends State<chatPage> {
                     if (messageController.text.isNotEmpty) {
                       firebaseFirestore.collection("Message").add({
                         'message': messageController.text.trim(),
-                        'time': FieldValue.serverTimestamp(), // Dùng timestamp của server
+                        'time': FieldValue.serverTimestamp(),
                         'name': widget.name,
                       }).then((value) {
                         messageController.clear();

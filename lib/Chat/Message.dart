@@ -39,9 +39,14 @@ class _MessageState extends State<Message> {
           itemBuilder: (context, index) {
             QueryDocumentSnapshot qds = snapshot.data!.docs[index];
 
-            // Kiểm tra null trước khi chuyển đổi
             Timestamp? time = qds['time'] as Timestamp?;
-            DateTime? dateTime = time?.toDate() ?? DateTime.now(); // Cung cấp giá trị mặc định nếu null
+            DateTime? dateTime = time?.toDate() ?? DateTime.now();
+
+            // Lấy toàn bộ dữ liệu của tài liệu
+            Map<String, dynamic> data = qds.data() as Map<String, dynamic>;
+
+            // Kiểm tra sự tồn tại của trường imageUrl
+            String? imageUrl = data['imageUrl'];
 
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -55,12 +60,7 @@ class _MessageState extends State<Message> {
                     child: ListTile(
                       shape: const RoundedRectangleBorder(
                         side: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
                       title: Text(
                         qds['name'],
@@ -70,20 +70,22 @@ class _MessageState extends State<Message> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Row(
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: 200,
-                            child: Text(
-                              qds["message"],
-                              softWrap: true,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                              ),
+                          // Kiểm tra và hiển thị ảnh nếu tồn tại imageUrl
+                          if (imageUrl != null && imageUrl.isNotEmpty)
+                            Image.network(imageUrl, height: 150, width: 150),
+
+                          Text(
+                            qds["message"],
+                            softWrap: true,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
                             ),
                           ),
-                          Text(" ${dateTime.hour}:${dateTime.minute} ")
+                          Text(" ${dateTime.hour}:${dateTime.minute} "),
                         ],
                       ),
                     ),
