@@ -15,7 +15,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _newPasswordController = TextEditingController();
   final _authMethod = AuthMethod(); // Using AuthMethod for Firebase Authentication
 
-  String _errorMessage = '';
+  String _errorMessage = ''; // biến lưu thông báo lỗi
   String? _verificationId;
   bool _isCodeSent = false;
 

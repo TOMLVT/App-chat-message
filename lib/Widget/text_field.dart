@@ -40,9 +40,9 @@ class TextFieldInput extends StatelessWidget {
               color: Colors.blue,
             ),
             borderRadius: BorderRadius.circular(30)
-          )
+          ),
         ),
-
+        obscureText: isPass,
       ),
     );
   }

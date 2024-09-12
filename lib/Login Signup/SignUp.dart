@@ -22,6 +22,8 @@ class _SignupState extends State<Signup> {
 
   final AuthMethod _authMethod = AuthMethod();
 
+
+  // hàm xử lí khi người dùng đăng ký
   void registerUser() async {
     setState(() {
       isLoading = true;

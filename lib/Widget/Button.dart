@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyButtons extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback onTap; // hàm gọi khi user nhấn nút
   final String text;
   const MyButtons({
     super.key,
